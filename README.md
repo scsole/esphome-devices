@@ -1,2 +1,3 @@
-# esphome-devices
-My personal ESPHome configs
+# ESPHome Configs
+
+My personal configs for ESPHome devices
