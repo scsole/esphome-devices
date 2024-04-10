@@ -1,0 +1,7 @@
+---
+platform: status_led
+name: Status LED
+pin:
+  number: $status_led_pin
+  inverted: true
+entity_category: config

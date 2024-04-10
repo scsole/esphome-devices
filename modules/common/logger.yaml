@@ -1,0 +1,7 @@
+---
+substitutions:
+  # Disable logging over USB
+  logger_baud_rate: "0"
+
+logger:
+  baud_rate: $logger_baud_rate

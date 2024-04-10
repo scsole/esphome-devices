@@ -1,0 +1,7 @@
+---
+substitutions:
+  # Reducing the frequency at which data is flushed to the flash can help preserve flash health
+  flash_write_interval: 1min
+
+preferences:
+  flash_write_interval: $flash_write_interval
