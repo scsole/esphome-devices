@@ -35,6 +35,12 @@ binary_sensor:
         then:
           - button.press: factory_reset_button
 
+globals:
+  - id: total_energy
+    type: float
+    restore_value: yes
+    initial_value: "0.0"
+
 sensor:
   - platform: cse7766
     current:
@@ -57,11 +63,18 @@ sensor:
               return x;
     energy:
       name: Energy
-      id: energy
+      id: energy_sensor
       unit_of_measurement: kWh
       filters:
         - throttle: ${update_interval}
         - multiply: 0.001 # Multiplication factor from W to kW is 0.001
+      on_value:
+        then:
+          - lambda: |-
+              static float previous_energy_value = 0.0;
+              float current_energy_value = id(energy_sensor).state;
+              id(total_energy) += current_energy_value - previous_energy_value;
+              previous_energy_value = current_energy_value;
     apparent_power:
       name: Apparent Power
       filters:
@@ -80,6 +93,16 @@ sensor:
     accuracy_decimals: 3
     filters:
       - multiply: 0.001 # Multiplication factor from W to kW is 0.001
+
+  - platform: template
+    name: Total Energy
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    lambda: |-
+      return id(total_energy);
+    update_interval: ${update_interval}
 
 switch:
   - platform: gpio
