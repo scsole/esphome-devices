@@ -35,6 +35,17 @@ binary_sensor:
         then:
           - button.press: factory_reset_button
 
+button:
+  # Reset the total energy entity
+  - platform: template
+    id: button_reset_total_energy
+    name: Reset Total Energy
+    on_press:
+      - globals.set:
+          id: total_energy
+          value: "0.0"
+    entity_category: config
+
 globals:
   - id: total_energy
     type: float
