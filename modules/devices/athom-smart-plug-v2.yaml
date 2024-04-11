@@ -61,7 +61,7 @@ sensor:
       unit_of_measurement: kWh
       filters:
         - throttle: ${update_interval}
-        - multiply: 0.001 # W to kW
+        - multiply: 0.001 # Multiplication factor from W to kW is 0.001
     apparent_power:
       name: Apparent Power
       filters:
@@ -70,6 +70,16 @@ sensor:
       name: Power Factor
       filters:
         - throttle_average: ${update_interval}
+
+  - platform: total_daily_energy
+    name: Total Daily Energy
+    power_id: power_sensor
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      - multiply: 0.001 # Multiplication factor from W to kW is 0.001
 
 switch:
   - platform: gpio
