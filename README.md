@@ -31,3 +31,17 @@ uv pip install wheel # only needed under Windows and macOS
 uv pip install esphome
 esphome dashboard ./
 ```
+
+## Useful Notes
+
+### Renaming Devices
+
+1. Append the following wifi section to the config using the device's current name as the `old_name`
+2. Update the name and other desired values under `substitutions`
+3. Compile and upload to device
+4. Remove the wifi section from the config
+
+```yaml
+wifi:
+  use_address: old_name.local
+```
