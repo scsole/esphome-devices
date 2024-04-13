@@ -1,0 +1,8 @@
+---
+substitutions:
+  name: cellar-workbench-lamp
+  friendly_name: Cellar Workbench Lamp
+  room: Cellar
+
+packages:
+  common: !include modules/devices/sonoff-basic-r2-light.yaml
