@@ -4,6 +4,7 @@ substitutions:
   board: esp8285
   update_interval: 10s
   restore_mode: RESTORE_DEFAULT_OFF
+  disabled_by_default: "false"
   # Power bellow this threshold will be reported as 0W
   zero_power_threshold: "0.0"
 
@@ -121,6 +122,7 @@ switch:
     pin: GPIO12
     id: relay
     restore_mode: ${restore_mode}
+    disabled_by_default: ${disabled_by_default}
 
 light:
   - platform: status_led
