@@ -1,0 +1,15 @@
+---
+substitutions:
+  comment: Sonoff Basic R2
+  board: esp8285
+
+packages:
+  common: !include ../common-8266.yaml
+
+light:
+  - platform: status_led
+    name: Status LED
+    pin:
+      number: GPIO13
+      inverted: true
+    entity_category: config
