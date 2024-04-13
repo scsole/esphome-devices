@@ -1,8 +1,0 @@
----
-substitutions:
-  name: lab-utility-plug
-  friendly_name: Lab Utility Plug
-  room: Lab
-
-packages:
-  common: !include modules/devices/athom-smart-plug-v2.yaml
