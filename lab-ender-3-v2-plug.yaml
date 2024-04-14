@@ -1,0 +1,9 @@
+---
+substitutions:
+  name: lab-ender-3-v2-plug
+  friendly_name: Lab Ender-3 v2 Plug
+  room: Lab
+  zero_power_threshold: "1.5"
+
+packages:
+  common: !include modules/devices/athom-smart-plug-v2.yaml
