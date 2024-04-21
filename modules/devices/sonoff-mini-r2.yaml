@@ -1,0 +1,76 @@
+---
+substitutions:
+  comment: Sonoff Mini R2
+  board: esp8285
+  restore_mode: RESTORE_DEFAULT_OFF
+  disabled_by_default: "false"
+
+packages:
+  common: !include ../common-8266.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: Button
+    disabled_by_default: true
+    on_multi_click:
+      - timing:
+          - ON for at most 1s
+          - OFF for at least 0.2s
+        then:
+          - light.toggle: light_1
+      - timing:
+          - ON for at least 4s
+        then:
+          - button.press: factory_reset_button
+
+  - platform: gpio
+    name: Switch
+    pin:
+      number: GPIO04
+      inverted: true
+    id: switch_1
+    disabled_by_default: true
+    # Edge
+    # on_press:
+    #   then:
+    #     - light.toggle:
+    #         id: light_1
+    # on_release:
+    #   then:
+    #     - light.toggle:
+    #         id: light_1
+    # Toggle
+    on_press:
+      then:
+        - light.turn_on:
+            id: light_1
+    on_release:
+      then:
+        - light.turn_off:
+            id: light_1
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: relay_1
+
+light:
+  - platform: binary
+    name:  Light
+    output: relay_1
+    id: light_1
+    restore_mode: ${restore_mode}
+    disabled_by_default: ${disabled_by_default}
+
+  - platform: status_led
+    name: Status LED
+    pin:
+      number: GPIO13
+      inverted: true
+    entity_category: config
