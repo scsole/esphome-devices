@@ -1,0 +1,8 @@
+---
+substitutions:
+  name: cellar-ceiling-light
+  friendly_name: Cellar Ceiling Light
+  room: Cellar
+
+packages:
+  common: !include modules/devices/sonoff-mini-r2.yaml
