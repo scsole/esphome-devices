@@ -1,0 +1,9 @@
+---
+substitutions:
+  name: bedroom-3-soundbar-plug
+  friendly_name: Bedroom 3 Soundbar Plug
+  room: Bedroom 3
+  restore_mode: RESTORE_DEFAULT_ON
+
+packages:
+  common: !include modules/devices/sonoff-s26.yaml
