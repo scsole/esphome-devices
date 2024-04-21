@@ -38,11 +38,11 @@ binary_sensor:
     disabled_by_default: true
     on_press:
       then:
-        - light.turn_on:
+        - light.toggle:
             id: light_1
     on_release:
       then:
-        - light.turn_off:
+        - light.toggle:
             id: light_1
 
 output:
