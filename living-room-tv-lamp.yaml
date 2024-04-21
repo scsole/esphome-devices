@@ -1,0 +1,7 @@
+---
+substitutions:
+  name: living-room-tv-lamp
+  friendly_name: Living Room TV Lamp
+  room: Living Room
+packages:
+  common: !include modules/devices/sonoff-basic-r2-light.yaml
