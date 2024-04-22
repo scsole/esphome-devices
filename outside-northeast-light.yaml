@@ -2,7 +2,7 @@
 substitutions:
   name: outside-northeast-light
   friendly_name: Outside Northeast Light
-  room: Outside
+  area: Outside
 
 packages:
   common: !include modules/devices/sonoff-mini-r2.yaml

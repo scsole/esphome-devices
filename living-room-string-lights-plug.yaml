@@ -2,7 +2,7 @@
 substitutions:
   name: living-room-string-lights-plug
   friendly_name: Living Room String Lights Plug
-  room: Living Room
+  area: Living Room
 
 packages:
   common: !include modules/devices/sonoff-s26.yaml

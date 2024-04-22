@@ -2,7 +2,7 @@
 substitutions:
   name: bedroom-3-lamp
   friendly_name: Bedroom 3 Lamp
-  room: Bedroom 3
+  area: Bedroom 3
 
 packages:
   common: !include modules/devices/sonoff-basic-r2-light.yaml

@@ -2,7 +2,7 @@
 substitutions:
   name: lab-server-rack-plug
   friendly_name: Lab Server Rack Plug
-  room: Lab
+  area: Lab
   # Use this plug as a metering device
   restore_mode: ALWAYS_ON
   disabled_by_default: "true"

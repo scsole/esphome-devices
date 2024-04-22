@@ -2,7 +2,7 @@
 substitutions:
   name: downstairs-lobby-stair-light
   friendly_name: Downstairs Lobby Stair Light
-  room: Downstairs Lobby
+  area: Downstairs Lobby
 
 packages:
   common: !include modules/devices/sonoff-mini-r2-edge.yaml

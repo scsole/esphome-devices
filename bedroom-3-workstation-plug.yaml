@@ -2,7 +2,7 @@
 substitutions:
   name: bedroom-3-workstation-plug
   friendly_name: Bedroom 3 Workstation Plug
-  room: Bedroom 3
+  area: Bedroom 3
 
 packages:
   common: !include modules/devices/athom-smart-plug-v2.yaml

@@ -2,7 +2,7 @@
 substitutions:
   name: living-room-hi-fi-plug
   friendly_name: Living Room Hi-Fi Plug
-  room: Living Room
+  area: Living Room
   zero_power_threshold: "3.0"
 
 packages:
