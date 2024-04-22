@@ -3,7 +3,7 @@ substitutions:
   name: living-room-hi-fi-plug
   friendly_name: Living Room Hi-Fi Plug
   room: Living Room
-  zero_power_threshold: "1.5"
+  zero_power_threshold: "3.0"
 
 packages:
   common: !include modules/devices/athom-smart-plug-v2.yaml
