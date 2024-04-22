@@ -8,6 +8,11 @@ substitutions:
 packages:
   common: !include ../common-8266.yaml
 
+esphome:
+  project:
+    name: "sonoff.mini-r2"
+    version: "1.0.0"
+
 binary_sensor:
   - platform: gpio
     pin:

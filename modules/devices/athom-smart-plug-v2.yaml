@@ -11,6 +11,11 @@ substitutions:
 packages:
   common: !include ../common-8266.yaml
 
+esphome:
+  project:
+    name: "athom-technology.smart-plug-v2"
+    version: "1.0.0"
+
 uart:
   rx_pin: RX
   baud_rate: 4800
