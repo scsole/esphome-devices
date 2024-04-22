@@ -1,0 +1,9 @@
+---
+substitutions:
+  name: outside-car-charger-outlet
+  friendly_name: Outside Car Charger Outlet
+  area: Outside
+  restore_mode: RESTORE_DEFAULT_ON
+
+packages:
+  common: !include modules/devices/sonoff-pow-r2.yaml
