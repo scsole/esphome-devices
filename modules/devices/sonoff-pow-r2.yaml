@@ -1,0 +1,149 @@
+---
+substitutions:
+  comment: Sonoff POW R2
+  board: esp01_1m
+  update_interval: 10s
+  restore_mode: RESTORE_DEFAULT_OFF
+  disabled_by_default: "false"
+  # Power bellow this threshold will be reported as 0W
+  power_threshold: "2.1"
+  # Roughly correct for the relay's power usage
+  power_offset: "0.1"
+  # Current bellow this threshold will be reported as 0A
+  current_threshold: "0.1"
+  # Roughly correct for the relay's current draw
+  current_offset: "0.01"
+
+packages:
+  common: !include ../common-8266.yaml
+
+esphome:
+  project:
+    name: "sonoff.pow-r2"
+    version: "1.0.0"
+
+uart:
+  rx_pin: RX
+  baud_rate: 4800
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 5
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: Button
+    disabled_by_default: true
+    on_multi_click:
+      - timing:
+          - ON for at most 1s
+          - OFF for at least 0.2s
+        then:
+          - switch.toggle: relay
+      - timing:
+          - ON for at least 4s
+        then:
+          - button.press: factory_reset_button
+
+button:
+  # Reset the total energy entity
+  - platform: template
+    id: button_reset_total_energy
+    name: Reset Total Energy
+    on_press:
+      - globals.set:
+          id: total_energy
+          value: "0.0"
+    entity_category: config
+
+globals:
+  - id: total_energy
+    type: float
+    restore_value: yes
+    initial_value: "0.0"
+
+sensor:
+  - platform: cse7766
+    current:
+      name: Current
+      filters:
+        - throttle_average: ${update_interval}
+        - lambda: |-
+            if (x < (${current_threshold} + ${current_offset}))
+              return 0.0;
+            else
+              return (x - ${current_offset});
+    voltage:
+      name: Voltage
+      filters:
+        - throttle_average: ${update_interval}
+    power:
+      name: Power
+      id: power_sensor
+      filters:
+        - throttle_average: ${update_interval}
+        - lambda: |-
+            if (x < (${power_threshold} + ${power_offset}))
+              return 0.0;
+            else
+              return (x - ${power_offset});
+    energy:
+      name: Energy
+      id: energy_sensor
+      unit_of_measurement: kWh
+      filters:
+        - throttle: ${update_interval}
+        - multiply: 0.001 # Multiplication factor from W to kW is 0.001
+      on_value:
+        then:
+          - lambda: |-
+              static float previous_energy_value = 0.0;
+              float current_energy_value = id(energy_sensor).state;
+              id(total_energy) += current_energy_value - previous_energy_value;
+              previous_energy_value = current_energy_value;
+    apparent_power:
+      name: Apparent Power
+      filters:
+        - throttle_average: ${update_interval}
+    power_factor:
+      name: Power Factor
+      filters:
+        - throttle_average: ${update_interval}
+
+  - platform: total_daily_energy
+    name: Total Daily Energy
+    power_id: power_sensor
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      - multiply: 0.001 # Multiplication factor from W to kW is 0.001
+
+  - platform: template
+    name: Total Energy
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    lambda: |-
+      return id(total_energy);
+    update_interval: ${update_interval}
+
+switch:
+  - platform: gpio
+    name: Switch
+    pin: GPIO12
+    id: relay
+    restore_mode: ${restore_mode}
+    disabled_by_default: ${disabled_by_default}
+
+light:
+  - platform: status_led
+    name: Status LED
+    pin:
+      number: GPIO13
+      inverted: true
+    entity_category: config
