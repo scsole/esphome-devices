@@ -1,0 +1,11 @@
+---
+substitutions:
+  board: esp01_1m
+
+esp8266:
+  board: $board
+  restore_from_flash: true
+
+packages:
+  base: !include common-base-lite.yaml
+  wifi: !include common/wifi.yaml
