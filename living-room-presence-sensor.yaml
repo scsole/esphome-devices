@@ -1,0 +1,7 @@
+---
+substitutions:
+  name: living-room-presence-sensor
+  friendly_name: Living Room Presence Sensor
+
+packages:
+  common: !include modules/devices/athom-presence-sensor.yaml
