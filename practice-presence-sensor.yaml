@@ -2,6 +2,7 @@
 substitutions:
   name: practice-presence-sensor
   friendly_name: Practice Presence Sensor
+  area: Practice
 
 packages:
   common: !include modules/devices/athom-presence-sensor.yaml

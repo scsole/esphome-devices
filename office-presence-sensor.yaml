@@ -2,6 +2,7 @@
 substitutions:
   name: office-presence-sensor
   friendly_name: Office Presence Sensor
+  area: Office
 
 packages:
   common: !include modules/devices/athom-presence-sensor.yaml
