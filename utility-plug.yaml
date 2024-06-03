@@ -2,6 +2,7 @@
 substitutions:
   name: utility-plug
   friendly_name: Utility Plug
+  update_interval: 2s
 
 packages:
   common: !include modules/devices/athom-smart-plug-v2.yaml
