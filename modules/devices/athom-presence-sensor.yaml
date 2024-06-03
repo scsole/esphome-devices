@@ -17,7 +17,7 @@ light:
     name: Status LED
     pin:
       number: GPIO16
-      inverted: true
+      inverted: false
     entity_category: config
     id: led
 
