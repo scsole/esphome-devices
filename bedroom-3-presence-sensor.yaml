@@ -1,0 +1,7 @@
+---
+substitutions:
+  name: bedroom-3-presence-sensor
+  friendly_name: Bedroom 3 Presence Sensor
+
+packages:
+  common: !include modules/devices/athom-presence-sensor.yaml

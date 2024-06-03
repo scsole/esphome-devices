@@ -1,0 +1,7 @@
+---
+substitutions:
+  name: downstairs-lobby-presence
+  friendly_name: Downstairs Lobby Presence Sensor
+
+packages:
+  common: !include modules/devices/athom-presence-sensor.yaml
