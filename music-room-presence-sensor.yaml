@@ -1,0 +1,25 @@
+---
+substitutions:
+  name: music-room-presence-sensor
+  friendly_name: Music Room Presence Sensor
+  area: Music Room
+  i2c_sda: GPIO4
+  i2c_scl: GPIO5
+
+packages:
+  common: !include modules/devices/athom-presence-sensor.yaml
+  i2c: !include modules/common/i2c.yaml
+
+# Modded Athom Presence Sensor with additional BME280 sensor
+
+sensor:
+  - platform: bme280_i2c
+    temperature:
+      name: Temperature
+    pressure:
+      name: Pressure
+    humidity:
+      name: Humidity
+    update_interval: 30s
+    i2c_id: i2c_bus
+    address: 0x76
