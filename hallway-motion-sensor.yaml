@@ -1,0 +1,14 @@
+---
+substitutions:
+  name: hallway-motion-sensor
+  friendly_name: Hallway Motion Sensor
+  area: Hallway
+
+packages:
+  common: !include modules/devices/wemos-d1-mini.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO0
+    name: PIR
+    device_class: motion
