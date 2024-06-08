@@ -9,7 +9,7 @@ packages:
 
 esphome:
   project:
-    name: "athom-technology.presence-sensor"
+    name: "Athom Technology.Presence Sensor"
     version: "1.0.0"
 
 light:

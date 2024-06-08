@@ -13,7 +13,7 @@ packages:
 
 esphome:
   project:
-    name: "athom-technology.smart-plug-v2"
+    name: "Athom Technology.Smart Plug v2"
     version: "1.0.0"
 
 uart:
