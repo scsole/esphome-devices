@@ -1,0 +1,9 @@
+---
+substitutions:
+  i2c_scan: "false"
+
+i2c:
+  sda: $i2c_sda
+  scl: $i2c_scl
+  scan: $i2c_scan
+  id: i2c_bus
