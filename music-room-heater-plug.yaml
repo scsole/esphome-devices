@@ -1,8 +1,8 @@
 ---
 substitutions:
-  name: utility-plug
-  friendly_name: Utility Plug
-  update_interval: 2s
+  name: music-room-heater-plug
+  friendly_name: Music Room Heater Plug
+  area: Music Room
 
 packages:
   common: !include modules/devices/athom-smart-plug-v2.yaml
