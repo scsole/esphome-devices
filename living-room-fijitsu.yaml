@@ -1,0 +1,42 @@
+---
+substitutions:
+  name: living-room-fijitsu
+  friendly_name: Living Room Fijitsu
+  area: Living Room
+  i2c_sda: GPIO4
+  i2c_scl: GPIO5
+  comment: Fijitsu heat pump IR controller
+
+packages:
+  common: !include modules/devices/nodemcu.yaml
+  i2c: !include modules/common/i2c.yaml
+
+sensor:
+  - platform: bme280_i2c
+    temperature:
+      name: Temperature
+      id: climate_temperature
+    pressure:
+      name: Pressure
+    humidity:
+      name: Humidity
+    update_interval: 30s
+    i2c_id: i2c_bus
+    address: 0x76
+
+remote_transmitter:
+  pin: GPIO12
+  carrier_duty_percent: 50%
+
+climate:
+  - platform: fujitsu_general
+    name: "Heat Pump"
+    sensor: climate_temperature
+    supports_cool: true
+    supports_heat: true
+    visual:
+      min_temperature: 16
+      max_temperature: 30
+      temperature_step:
+        target_temperature: 1.0
+        current_temperature: 0.1
