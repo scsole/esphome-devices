@@ -1,0 +1,209 @@
+---
+# Home Assistant Glow
+#
+# Read your electricity meter by means of the pulse LED on your
+# meter, useful if you do not have a serial port (P1).
+# © Klaas Schoute
+#
+substitutions:
+  device_name: home-assistant-glow
+  friendly_name: Smart Meter
+  project_version: "4.0.0-esp32-poe"
+  device_description: "Measure your energy consumption with the pulse LED on your smart meter - Olimex ESP32-PoE"
+
+  # Define the GPIO pins
+  pulse_pin: GPIO14
+  status_led: GPIO5
+  led_pin_red: GPIO2
+  led_pin_green: GPIO4
+
+  # Webserver credentials
+  web_username: 'glow'
+  web_password: 'esphome'
+
+esphome:
+  name: '${device_name}'
+  name_add_mac_suffix: false
+  friendly_name: ${friendly_name}
+  comment: '${device_description}'
+  project:
+    name: "klaasnicolaas.home-assistant-glow"
+    version: "${project_version}"
+
+# Choose the right Platform
+esp32:
+  board: esp32-poe
+  framework:
+    type: arduino
+
+# Ethernet interface, config suitable for the Olimex ESP32-POE
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+  power_pin: GPIO12
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+  services:
+    - service: reset_total_energy
+      then:
+        - button.press:
+            id: button_reset_total
+
+ota:
+  - platform: esphome
+
+web_server:
+  port: 80
+  auth:
+    username: '${web_username}'
+    password: '${web_password}'
+
+number:
+  # Select the correct pulse rate for your meter
+  - platform: template
+    id: select_pulse_rate
+    name: 'Puls rate - imp/kWh'
+    entity_category: config
+    optimistic: true
+    mode: box
+    min_value: 100
+    max_value: 10000
+    step: 100
+    restore_value: yes
+    initial_value: 1000
+
+  # Reset total energy to given value
+  - platform: template
+    id: select_reset_total
+    name: "Reset Value - Total Energy kWh"
+    entity_category: config
+    optimistic: true
+    mode: box
+    min_value: 0
+    max_value: 1000000
+    step: 1
+    initial_value: 0
+
+output:
+  # - platform: gpio
+  #   pin: GPIO5
+  #   id: output_blue
+  - platform: gpio
+    pin: ${led_pin_red}
+    id: output_red
+  - platform: gpio
+    pin: ${led_pin_green}
+    id: output_green
+
+light:
+  - platform: binary
+    internal: true
+    id: led_red
+    name: Red
+    output: output_red
+
+# Status LED for connection
+status_led:
+  pin:
+    number: ${status_led}
+
+button:
+  - platform: restart
+    name: Restart
+  - platform: factory_reset
+    name: Restart with Factory Default Settings
+    disabled_by_default: true
+  - platform: template
+    # Reset the total energy entity
+    name: "Reset - Total Energy"
+    id: button_reset_total
+    entity_category: config
+    on_press:
+      - pulse_meter.set_total_pulses:
+          id: sensor_energy_pulse_meter
+          value: !lambda "return id(select_reset_total).state * id(select_pulse_rate).state;"
+
+# Sensors for diagnostic information
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: IP Address
+
+sensor:
+  # Pulse meter
+  - platform: pulse_meter
+    name: 'Power Consumption'
+    id: sensor_energy_pulse_meter
+    unit_of_measurement: 'W'
+    state_class: measurement
+    device_class: power
+    icon: mdi:flash-outline
+    accuracy_decimals: 0
+    pin: ${pulse_pin}
+    internal_filter: 100ms
+    # Pulse LED on meter pulse
+    # on_raw_value:
+    #   then:
+    #     - light.turn_on:
+    #         id: led_red
+    #     - delay: 0.2s
+    #     - light.turn_off:
+    #         id: led_red
+    filters:
+      # multiply value = (60 / imp value) * 1000
+      # - multiply: 60
+      - lambda: return x * ((60.0 / id(select_pulse_rate).state) * 1000.0);
+
+      # Update the sensor with an average every 10th second. See
+      # https://github.com/klaasnicolaas/home-assistant-glow/#reduce-the-amount-of-data-the-sensors-produce
+      # for more information.
+      - throttle_average: 10s
+      - filter_out: NaN
+
+    total:
+      name: 'Total Energy'
+      id: sensor_total_energy
+      unit_of_measurement: 'kWh'
+      icon: mdi:circle-slice-3
+      state_class: total_increasing
+      device_class: energy
+      accuracy_decimals: 3
+      filters:
+        # multiply value = 1 / imp value
+        # - multiply: 0.001
+        - lambda: return x * (1.0 / id(select_pulse_rate).state);
+
+        # Update the sensor once per 0.1 kWh consumed, or every 5th minute, whichever happens sooner.
+        # See https://github.com/klaasnicolaas/home-assistant-glow/#reduce-the-amount-of-data-the-sensors-produce
+        # for more information.
+        - delta: 0.01
+        - heartbeat: 300s
+
+  # Total day usage
+  - platform: total_daily_energy
+    name: 'Daily Energy'
+    id: sensor_total_daily_energy
+    power_id: sensor_energy_pulse_meter
+    unit_of_measurement: 'kWh'
+    icon: mdi:circle-slice-3
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+# Enable time component to reset energy at midnight
+# https://esphome.io/components/time/homeassistant.html
+time:
+  - platform: homeassistant
+    id: homeassistant_time
