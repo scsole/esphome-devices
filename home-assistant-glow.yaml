@@ -1,4 +1,6 @@
 ---
+# TODO: Refactor to bring in line with project upstream
+#
 # Home Assistant Glow
 #
 # Read your electricity meter by means of the pulse LED on your
