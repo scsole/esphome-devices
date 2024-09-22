@@ -1,0 +1,8 @@
+---
+substitutions:
+  name: kitchen-presence-sensor
+  friendly_name: Kitchen Presence Sensor
+  area: Kitchen
+
+packages:
+  common: !include modules/devices/athom-presence-sensor.yaml
